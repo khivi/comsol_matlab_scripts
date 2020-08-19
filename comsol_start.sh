@@ -18,7 +18,7 @@ output=`mktemp`
 
 comsol mphserver -np 32 > $output &
 
-RE="(?<=port )\d+"
+RE='(?<=port )\d+'
 grep -q -P "$RE"  <(tail -f $output)
 PORT=$(grep -m 1 -P -o "$RE" <(cat $output))
 
