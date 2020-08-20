@@ -16,10 +16,13 @@
 
 output=`mktemp`
 
-comsol mphserver -np 32 > $output &
+MPHSERVER_PARAMS='<changeME>'
+MATLAB_SCRIPT='<changeME>'
+
+comsol mphserver $MPHSERVER_PARAMS > $output &
 
 RE='(?<=port )\d+'
 grep -q -P "$RE"  <(tail -f $output)
 PORT=$(grep -m 1 -P -o "$RE" <(cat $output))
 
-matlab -nodisplay -singleCompThread -r "addpath('/usr/local/comsol55/multiphysics/mli'); mphstart('localhost', $PORT); dust_coupledC_thet(*); exit"
+matlab -nodisplay -singleCompThread -r "addpath('/usr/local/comsol55/multiphysics/mli'); mphstart('localhost', $PORT); $MATLAB_SCRIPT; exit"
